@@ -49,7 +49,7 @@ Without ACF, the plugin attempts to read values from post meta with the same fie
 
 = Which taxonomies are used? =
 
-* `portfolio_item` uses `category`.
+* `portfolio_item` uses `portfolio`.
 * `movie` uses `movie-category`.
 
 == Changelog ==

@@ -615,8 +615,19 @@ function cpf_render_template( $template_name, $template_vars = array() ) {
 function cpf_shortcode_portfolio_display() {
 	$portfolio_posts = cpf_get_posts_by_type( 'portfolio_item' );
 	$post_ids        = wp_list_pluck( $portfolio_posts, 'ID' );
-	$term_map        = cpf_get_post_term_map( $post_ids, 'category' );
-	$terms           = cpf_get_terms_for_posts( 'category', $post_ids );
+	$term_map        = cpf_get_post_term_map( $post_ids, 'portfolio' );
+	$terms           = get_terms(
+		array(
+			'taxonomy'   => 'portfolio',
+			'hide_empty' => true,
+			'orderby'    => 'name',
+			'order'      => 'ASC',
+		)
+	);
+
+	if ( is_wp_error( $terms ) || ! is_array( $terms ) ) {
+		$terms = array();
+	}
 	$all_posts       = array();
 
 	foreach ( $portfolio_posts as $portfolio_post ) {

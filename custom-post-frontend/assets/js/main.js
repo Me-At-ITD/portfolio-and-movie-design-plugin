@@ -128,6 +128,8 @@
 				} );
 			}( tabIndex ) );
 		}
+
+		activateTab( tabs[ 0 ], false );
 	}
 
 	/**
@@ -417,13 +419,13 @@
 	 */
 	function cpfPopulatePortfolioModal( modal, title, images ) {
 		var titleNode = modal.querySelector( '.cpf-modal-title' );
-		var mainSlider = modal.querySelector( '.cpf-portfolio-main' );
-		var thumbsSlider = modal.querySelector( '.cpf-portfolio-thumbs' );
-		var mainWrapper = modal.querySelector( '.cpf-portfolio-main .swiper-wrapper' );
-		var thumbsWrapper = modal.querySelector( '.cpf-portfolio-thumbs .swiper-wrapper' );
-		var pagination = modal.querySelector( '.cpf-portfolio-main .swiper-pagination' );
-		var nextButton = modal.querySelector( '.cpf-swiper-button-next' );
-		var prevButton = modal.querySelector( '.cpf-swiper-button-prev' );
+		var mainSlider = modal.querySelector( '.cpf-slider-main' );
+		var thumbsSlider = modal.querySelector( '.cpf-slider-thumbs' );
+		var mainWrapper = modal.querySelector( '.cpf-slider-main .swiper-wrapper' );
+		var thumbsWrapper = modal.querySelector( '.cpf-slider-thumbs .swiper-wrapper' );
+		var pagination = modal.querySelector( '.cpf-slider-main .swiper-pagination' );
+		var nextButton = modal.querySelector( '.cpf-slider-next' );
+		var prevButton = modal.querySelector( '.cpf-slider-prev' );
 		var index = 0;
 
 		if ( titleNode ) {
@@ -508,11 +510,19 @@
 		modal.cpfThumbSwiper = new window.Swiper(
 			thumbsSlider,
 			{
+				slidesPerView: 5,
 				spaceBetween: 10,
-				slidesPerView: Math.min( 5, images.length ),
 				freeMode: true,
 				watchSlidesProgress: true,
-				slideToClickedSlide: true
+				slideToClickedSlide: true,
+				breakpoints: {
+					0: {
+						slidesPerView: 3
+					},
+					768: {
+						slidesPerView: 5
+					}
+				}
 			}
 		);
 
@@ -520,6 +530,10 @@
 			mainSlider,
 			{
 				spaceBetween: 12,
+				keyboard: {
+					enabled: true,
+					onlyInViewport: false
+				},
 				navigation: {
 					nextEl: nextButton,
 					prevEl: prevButton
