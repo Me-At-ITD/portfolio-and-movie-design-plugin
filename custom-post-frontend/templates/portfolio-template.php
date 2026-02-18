@@ -86,61 +86,66 @@ if ( isset( $cpf_terms ) && is_array( $cpf_terms ) ) {
 			<?php if ( empty( $cpf_posts ) ) : ?>
 				<p class="cpf-empty-message"><?php esc_html_e( 'No portfolio items found for this category.', 'custom-post-frontend-display' ); ?></p>
 			<?php else : ?>
-				<div class="cpf-portfolio-grid">
-					<?php foreach ( $cpf_posts as $cpf_post ) : ?>
-						<?php
-						$cpf_post_id      = isset( $cpf_post['id'] ) ? absint( $cpf_post['id'] ) : 0;
-						$cpf_post_title   = isset( $cpf_post['title'] ) ? (string) $cpf_post['title'] : '';
-						$cpf_featured     = isset( $cpf_post['featured_image_url'] ) ? (string) $cpf_post['featured_image_url'] : '';
-						$cpf_featured_alt = isset( $cpf_post['featured_image_alt'] ) ? (string) $cpf_post['featured_image_alt'] : '';
-						$cpf_gallery      = isset( $cpf_post['gallery'] ) && is_array( $cpf_post['gallery'] ) ? $cpf_post['gallery'] : array();
-						$cpf_gallery_json = wp_json_encode( $cpf_gallery );
-						$cpf_gallery_json = is_string( $cpf_gallery_json ) ? $cpf_gallery_json : '[]';
-						$cpf_photo_count  = count( $cpf_gallery );
-						$cpf_photo_text   = $cpf_photo_count > 0
-							? sprintf(
-								/* translators: %d: number of photos. */
-								_n( '%d photo', '%d photos', $cpf_photo_count, 'custom-post-frontend-display' ),
-								$cpf_photo_count
-							)
-							: __( 'View Photos', 'custom-post-frontend-display' );
-						$cpf_item_date = get_the_date( 'Y-m-d', $cpf_post_id );
-						?>
-						<article class="cpf-portfolio-card">
-							<button
-								type="button"
-								class="cpf-card-trigger cpf-portfolio-trigger cpf-portfolio-button"
-								data-cpf-post-id="<?php echo esc_attr( $cpf_post_id ); ?>"
-								data-cpf-title="<?php echo esc_attr( $cpf_post_title ); ?>"
-								data-cpf-images="<?php echo esc_attr( $cpf_gallery_json ); ?>"
-								data-cpf-modal-id="<?php echo esc_attr( $cpf_modal_id ); ?>"
-								aria-haspopup="dialog"
-								aria-controls="<?php echo esc_attr( $cpf_modal_id ); ?>"
-							>
-								<span class="cpf-portfolio-thumb">
-									<?php if ( '' !== $cpf_featured ) : ?>
-										<img
-											src="<?php echo esc_url( $cpf_featured ); ?>"
-											alt="<?php echo esc_attr( $cpf_featured_alt ); ?>"
-											loading="lazy"
-											decoding="async"
-										/>
-									<?php else : ?>
-										<span class="cpf-card-media-placeholder"><?php esc_html_e( 'Image unavailable', 'custom-post-frontend-display' ); ?></span>
-									<?php endif; ?>
-									<span class="cpf-overlay">
-										<span class="cpf-photo-count"><?php echo esc_html( $cpf_photo_text ); ?></span>
+				<div class="cpf-grid-wrapper">
+					<div class="cpf-portfolio-grid">
+						<?php foreach ( $cpf_posts as $cpf_post ) : ?>
+							<?php
+							$cpf_post_id      = isset( $cpf_post['id'] ) ? absint( $cpf_post['id'] ) : 0;
+							$cpf_post_title   = isset( $cpf_post['title'] ) ? (string) $cpf_post['title'] : '';
+							$cpf_featured     = isset( $cpf_post['featured_image_url'] ) ? (string) $cpf_post['featured_image_url'] : '';
+							$cpf_featured_alt = isset( $cpf_post['featured_image_alt'] ) ? (string) $cpf_post['featured_image_alt'] : '';
+							$cpf_gallery      = isset( $cpf_post['gallery'] ) && is_array( $cpf_post['gallery'] ) ? $cpf_post['gallery'] : array();
+							$cpf_gallery_json = wp_json_encode( $cpf_gallery );
+							$cpf_gallery_json = is_string( $cpf_gallery_json ) ? $cpf_gallery_json : '[]';
+							$cpf_photo_count  = count( $cpf_gallery );
+							$cpf_photo_text   = $cpf_photo_count > 0
+								? sprintf(
+									/* translators: %d: number of photos. */
+									_n( '%d photo', '%d photos', $cpf_photo_count, 'custom-post-frontend-display' ),
+									$cpf_photo_count
+								)
+								: __( 'View Photos', 'custom-post-frontend-display' );
+							$cpf_item_date = get_the_date( 'Y-m-d', $cpf_post_id );
+							?>
+							<article class="cpf-portfolio-card">
+								<button
+									type="button"
+									class="cpf-card-trigger cpf-portfolio-trigger cpf-portfolio-button"
+									data-cpf-post-id="<?php echo esc_attr( $cpf_post_id ); ?>"
+									data-cpf-title="<?php echo esc_attr( $cpf_post_title ); ?>"
+									data-cpf-images="<?php echo esc_attr( $cpf_gallery_json ); ?>"
+									data-cpf-modal-id="<?php echo esc_attr( $cpf_modal_id ); ?>"
+									aria-haspopup="dialog"
+									aria-controls="<?php echo esc_attr( $cpf_modal_id ); ?>"
+								>
+									<span class="cpf-portfolio-thumb">
+										<?php if ( '' !== $cpf_featured ) : ?>
+											<img
+												src="<?php echo esc_url( $cpf_featured ); ?>"
+												alt="<?php echo esc_attr( $cpf_featured_alt ); ?>"
+												loading="lazy"
+												decoding="async"
+											/>
+										<?php else : ?>
+											<span class="cpf-card-media-placeholder"><?php esc_html_e( 'Image unavailable', 'custom-post-frontend-display' ); ?></span>
+										<?php endif; ?>
+										<span class="cpf-overlay">
+											<span class="cpf-photo-count"><?php echo esc_html( $cpf_photo_text ); ?></span>
+										</span>
 									</span>
-								</span>
-								<span class="cpf-portfolio-info">
-									<span class="cpf-title"><?php echo esc_html( $cpf_post_title ); ?></span>
-									<span class="cpf-meta">
-										<span class="cpf-date"><i class="fa fa-calendar" aria-hidden="true"></i> <?php echo esc_html( is_string( $cpf_item_date ) ? $cpf_item_date : '' ); ?></span>
+									<span class="cpf-portfolio-info">
+										<span class="cpf-title"><?php echo esc_html( $cpf_post_title ); ?></span>
+										<span class="cpf-meta">
+											<span class="cpf-date"><i class="fa fa-calendar" aria-hidden="true"></i> <?php echo esc_html( is_string( $cpf_item_date ) ? $cpf_item_date : '' ); ?></span>
+										</span>
 									</span>
-								</span>
-							</button>
-						</article>
-					<?php endforeach; ?>
+								</button>
+							</article>
+						<?php endforeach; ?>
+					</div>
+					<div class="cpf-load-more-wrap">
+						<button type="button" class="cpf-load-more"><?php esc_html_e( 'Load More', 'custom-post-frontend-display' ); ?></button>
+					</div>
 				</div>
 			<?php endif; ?>
 		</div>

@@ -47,6 +47,75 @@
 		cpfRegisterAllModals();
 		cpfInitPortfolioTriggers();
 		cpfInitMovieTriggers();
+		cpfInitLoadMore();
+	}
+
+	/**
+	 * Initialize progressive load more for movie/portfolio grids.
+	 *
+	 * @return {void}
+	 */
+	function cpfInitLoadMore() {
+		var grids = document.querySelectorAll( '.cpf-movie-grid, .cpf-portfolio-grid' );
+		var gridIndex = 0;
+
+		for ( gridIndex = 0; gridIndex < grids.length; gridIndex += 1 ) {
+			( function ( grid ) {
+				var cards = [];
+				var cardSelector = grid.classList.contains( 'cpf-movie-grid' ) ? '.cpf-movie-card' : '.cpf-portfolio-card';
+				var loadMoreWrap = grid.parentElement ? grid.parentElement.querySelector( '.cpf-load-more-wrap' ) : null;
+				var button = null;
+				var visibleCount = 6;
+				var cardIndex = 0;
+
+				if ( ! loadMoreWrap ) {
+					return;
+				}
+
+				button = loadMoreWrap.querySelector( '.cpf-load-more' );
+				if ( ! button ) {
+					return;
+				}
+
+				cards = grid.querySelectorAll( cardSelector );
+
+				if ( ! cards.length ) {
+					loadMoreWrap.style.display = 'none';
+					return;
+				}
+
+				for ( cardIndex = 0; cardIndex < cards.length; cardIndex += 1 ) {
+					if ( cardIndex >= visibleCount ) {
+						cards[ cardIndex ].style.display = 'none';
+					}
+				}
+
+				if ( cards.length <= visibleCount ) {
+					loadMoreWrap.style.display = 'none';
+					return;
+				}
+
+				button.addEventListener( 'click', function () {
+					var hidden = [];
+					var hiddenIndex = 0;
+
+					hidden = Array.prototype.filter.call(
+						cards,
+						function ( card ) {
+							return 'none' === card.style.display;
+						}
+					);
+
+					for ( hiddenIndex = 0; hiddenIndex < hidden.length && hiddenIndex < 6; hiddenIndex += 1 ) {
+						hidden[ hiddenIndex ].style.display = 'block';
+					}
+
+					if ( hidden.length <= 6 ) {
+						loadMoreWrap.style.display = 'none';
+					}
+				} );
+			}( grids[ gridIndex ] ) );
+		}
 	}
 
 	/**

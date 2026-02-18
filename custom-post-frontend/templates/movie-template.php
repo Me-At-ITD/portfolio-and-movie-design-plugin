@@ -79,92 +79,97 @@ if ( isset( $cpf_terms ) && is_array( $cpf_terms ) ) {
 			<?php if ( empty( $cpf_posts ) ) : ?>
 				<p class="cpf-empty-message"><?php esc_html_e( 'No movies found for this category.', 'custom-post-frontend-display' ); ?></p>
 			<?php else : ?>
-				<div class="cpf-movie-grid">
-					<?php foreach ( $cpf_posts as $cpf_post ) : ?>
-						<?php
-						$cpf_post_id        = isset( $cpf_post['id'] ) ? absint( $cpf_post['id'] ) : 0;
-						$cpf_post_title     = isset( $cpf_post['title'] ) ? (string) $cpf_post['title'] : '';
-						$cpf_featured       = isset( $cpf_post['featured_image_url'] ) ? (string) $cpf_post['featured_image_url'] : '';
-						$cpf_featured_alt   = isset( $cpf_post['featured_image_alt'] ) ? (string) $cpf_post['featured_image_alt'] : '';
-						$cpf_video_url      = isset( $cpf_post['youtube_embed_url'] ) ? (string) $cpf_post['youtube_embed_url'] : '';
-						$cpf_movie_date     = get_the_date( 'Y-m-d', $cpf_post_id );
-						$cpf_duration_value = '';
+				<div class="cpf-grid-wrapper">
+					<div class="cpf-movie-grid">
+						<?php foreach ( $cpf_posts as $cpf_post ) : ?>
+							<?php
+							$cpf_post_id        = isset( $cpf_post['id'] ) ? absint( $cpf_post['id'] ) : 0;
+							$cpf_post_title     = isset( $cpf_post['title'] ) ? (string) $cpf_post['title'] : '';
+							$cpf_featured       = isset( $cpf_post['featured_image_url'] ) ? (string) $cpf_post['featured_image_url'] : '';
+							$cpf_featured_alt   = isset( $cpf_post['featured_image_alt'] ) ? (string) $cpf_post['featured_image_alt'] : '';
+							$cpf_video_url      = isset( $cpf_post['youtube_embed_url'] ) ? (string) $cpf_post['youtube_embed_url'] : '';
+							$cpf_movie_date     = get_the_date( 'Y-m-d', $cpf_post_id );
+							$cpf_duration_value = '';
 
-						if ( function_exists( 'get_field' ) ) {
-							$cpf_duration_field = get_field( 'duration', $cpf_post_id );
-							if ( is_scalar( $cpf_duration_field ) ) {
-								$cpf_duration_value = sanitize_text_field( (string) $cpf_duration_field );
+							if ( function_exists( 'get_field' ) ) {
+								$cpf_duration_field = get_field( 'duration', $cpf_post_id );
+								if ( is_scalar( $cpf_duration_field ) ) {
+									$cpf_duration_value = sanitize_text_field( (string) $cpf_duration_field );
+								}
 							}
-						}
 
-						if ( '' === $cpf_duration_value ) {
-							$cpf_duration_meta = get_post_meta( $cpf_post_id, 'duration', true );
-							if ( is_scalar( $cpf_duration_meta ) ) {
-								$cpf_duration_value = sanitize_text_field( (string) $cpf_duration_meta );
+							if ( '' === $cpf_duration_value ) {
+								$cpf_duration_meta = get_post_meta( $cpf_post_id, 'duration', true );
+								if ( is_scalar( $cpf_duration_meta ) ) {
+									$cpf_duration_value = sanitize_text_field( (string) $cpf_duration_meta );
+								}
 							}
-						}
 
-						$cpf_excerpt_raw = get_the_excerpt( $cpf_post_id );
-						$cpf_excerpt     = wp_trim_words(
-							wp_strip_all_tags( is_string( $cpf_excerpt_raw ) ? $cpf_excerpt_raw : '' ),
-							18,
-							'...'
-						);
-
-						if ( '' !== $cpf_video_url ) {
-							$cpf_video_url = add_query_arg(
-								array(
-									'autoplay'       => '1',
-									'modestbranding' => '1',
-									'rel'            => '0',
-									'controls'       => '1',
-									'showinfo'       => '0',
-								),
-								$cpf_video_url
+							$cpf_excerpt_raw = get_the_excerpt( $cpf_post_id );
+							$cpf_excerpt     = wp_trim_words(
+								wp_strip_all_tags( is_string( $cpf_excerpt_raw ) ? $cpf_excerpt_raw : '' ),
+								18,
+								'...'
 							);
-						}
-						?>
-						<article class="cpf-movie-card">
-							<button
-								type="button"
-								class="cpf-card-trigger cpf-movie-trigger cpf-movie-button"
-								data-cpf-post-id="<?php echo esc_attr( $cpf_post_id ); ?>"
-								data-cpf-title="<?php echo esc_attr( $cpf_post_title ); ?>"
-								data-cpf-video-url="<?php echo esc_url( $cpf_video_url ); ?>"
-								data-cpf-modal-id="<?php echo esc_attr( $cpf_modal_id ); ?>"
-								aria-haspopup="dialog"
-								aria-controls="<?php echo esc_attr( $cpf_modal_id ); ?>"
-							>
-								<span class="cpf-movie-thumb">
-									<?php if ( '' !== $cpf_featured ) : ?>
-										<img
-											src="<?php echo esc_url( $cpf_featured ); ?>"
-											alt="<?php echo esc_attr( $cpf_featured_alt ); ?>"
-											loading="lazy"
-											decoding="async"
-										/>
-									<?php else : ?>
-										<span class="cpf-card-media-placeholder"><?php esc_html_e( 'Image unavailable', 'custom-post-frontend-display' ); ?></span>
-									<?php endif; ?>
-									<span class="cpf-overlay">
-										<span class="cpf-play-icon"><i class="fa fa-play-circle" aria-hidden="true"></i></span>
+
+							if ( '' !== $cpf_video_url ) {
+								$cpf_video_url = add_query_arg(
+									array(
+										'autoplay'       => '1',
+										'modestbranding' => '1',
+										'rel'            => '0',
+										'controls'       => '1',
+										'showinfo'       => '0',
+									),
+									$cpf_video_url
+								);
+							}
+							?>
+							<article class="cpf-movie-card">
+								<button
+									type="button"
+									class="cpf-card-trigger cpf-movie-trigger cpf-movie-button"
+									data-cpf-post-id="<?php echo esc_attr( $cpf_post_id ); ?>"
+									data-cpf-title="<?php echo esc_attr( $cpf_post_title ); ?>"
+									data-cpf-video-url="<?php echo esc_url( $cpf_video_url ); ?>"
+									data-cpf-modal-id="<?php echo esc_attr( $cpf_modal_id ); ?>"
+									aria-haspopup="dialog"
+									aria-controls="<?php echo esc_attr( $cpf_modal_id ); ?>"
+								>
+									<span class="cpf-movie-thumb">
+										<?php if ( '' !== $cpf_featured ) : ?>
+											<img
+												src="<?php echo esc_url( $cpf_featured ); ?>"
+												alt="<?php echo esc_attr( $cpf_featured_alt ); ?>"
+												loading="lazy"
+												decoding="async"
+											/>
+										<?php else : ?>
+											<span class="cpf-card-media-placeholder"><?php esc_html_e( 'Image unavailable', 'custom-post-frontend-display' ); ?></span>
+										<?php endif; ?>
+										<span class="cpf-overlay">
+											<span class="cpf-play-icon"><i class="fa fa-play-circle" aria-hidden="true"></i></span>
+										</span>
 									</span>
-								</span>
-								<span class="cpf-movie-info">
-									<span class="cpf-title"><?php echo esc_html( $cpf_post_title ); ?></span>
-									<span class="cpf-meta">
-										<span class="cpf-date"><i class="fa fa-calendar" aria-hidden="true"></i> <?php echo esc_html( is_string( $cpf_movie_date ) ? $cpf_movie_date : '' ); ?></span>
-										<?php if ( '' !== $cpf_duration_value ) : ?>
-											<span class="cpf-time"><i class="fa fa-clock" aria-hidden="true"></i> <?php echo esc_html( $cpf_duration_value ); ?></span>
+									<span class="cpf-movie-info">
+										<span class="cpf-title"><?php echo esc_html( $cpf_post_title ); ?></span>
+										<span class="cpf-meta">
+											<span class="cpf-date"><i class="fa fa-calendar" aria-hidden="true"></i> <?php echo esc_html( is_string( $cpf_movie_date ) ? $cpf_movie_date : '' ); ?></span>
+											<?php if ( '' !== $cpf_duration_value ) : ?>
+												<span class="cpf-time"><i class="fa fa-clock" aria-hidden="true"></i> <?php echo esc_html( $cpf_duration_value ); ?></span>
+											<?php endif; ?>
+										</span>
+										<?php if ( '' !== $cpf_excerpt ) : ?>
+											<span class="cpf-desc"><?php echo esc_html( $cpf_excerpt ); ?></span>
 										<?php endif; ?>
 									</span>
-									<?php if ( '' !== $cpf_excerpt ) : ?>
-										<span class="cpf-desc"><?php echo esc_html( $cpf_excerpt ); ?></span>
-									<?php endif; ?>
-								</span>
-							</button>
-						</article>
-					<?php endforeach; ?>
+								</button>
+							</article>
+						<?php endforeach; ?>
+					</div>
+					<div class="cpf-load-more-wrap">
+						<button type="button" class="cpf-load-more"><?php esc_html_e( 'Load More', 'custom-post-frontend-display' ); ?></button>
+					</div>
 				</div>
 			<?php endif; ?>
 		</div>
