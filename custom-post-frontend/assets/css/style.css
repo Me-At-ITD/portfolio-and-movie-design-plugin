@@ -1,0 +1,394 @@
+.cpf-display {
+	margin: 2rem 0;
+}
+
+.cpf-tabs {
+	display: flex;
+	gap: 0.75rem;
+	align-items: center;
+	overflow-x: auto;
+	margin: 0 0 1.25rem;
+	padding: 0 0 0.35rem;
+	scrollbar-width: thin;
+}
+
+.cpf-tab {
+	background: #ffffff;
+	border: 1px solid #d0d7de;
+	border-radius: 999px;
+	color: #1f2933;
+	cursor: pointer;
+	font-size: 0.95rem;
+	font-weight: 600;
+	line-height: 1.2;
+	padding: 0.6rem 1rem;
+	transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+	white-space: nowrap;
+}
+
+.cpf-tab:hover,
+.cpf-tab:focus-visible {
+	border-color: #1f6feb;
+	color: #1f6feb;
+	outline: none;
+}
+
+.cpf-tab.is-active {
+	background: #1f6feb;
+	border-color: #1f6feb;
+	color: #ffffff;
+}
+
+.cpf-tab-panel[hidden] {
+	display: none !important;
+}
+
+.cpf-tab-panel.is-active {
+	animation: cpf-fade-in 0.22s ease;
+}
+
+@keyframes cpf-fade-in {
+	from {
+		opacity: 0;
+		transform: translateY(4px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.cpf-card-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 1rem;
+}
+
+.cpf-card {
+	background: #ffffff;
+	border: 1px solid #e5e7eb;
+	border-radius: 12px;
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+	overflow: hidden;
+	transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.cpf-card:hover {
+	box-shadow: 0 8px 20px rgba(15, 23, 42, 0.14);
+	transform: translateY(-2px);
+}
+
+.cpf-card-trigger {
+	appearance: none;
+	background: transparent;
+	border: 0;
+	color: inherit;
+	cursor: pointer;
+	display: block;
+	padding: 0;
+	text-align: left;
+	width: 100%;
+}
+
+.cpf-card-media {
+	align-items: center;
+	aspect-ratio: 4 / 3;
+	background: #f3f4f6;
+	display: flex;
+	justify-content: center;
+	overflow: hidden;
+	position: relative;
+}
+
+.cpf-card-media img {
+	display: block;
+	height: 100%;
+	object-fit: cover;
+	width: 100%;
+}
+
+.cpf-card-media-placeholder {
+	color: #6b7280;
+	font-size: 0.9rem;
+	padding: 0.75rem;
+	text-align: center;
+}
+
+.cpf-card-content {
+	padding: 0.8rem 0.9rem 1rem;
+}
+
+.cpf-card-title {
+	color: #111827;
+	display: block;
+	font-size: 1rem;
+	font-weight: 600;
+	line-height: 1.35;
+}
+
+.cpf-empty-message {
+	background: #f9fafb;
+	border: 1px dashed #d1d5db;
+	border-radius: 10px;
+	color: #4b5563;
+	margin: 0;
+	padding: 1rem;
+}
+
+.cpf-modal[hidden] {
+	display: none;
+}
+
+.cpf-modal {
+	align-items: center;
+	display: flex;
+	inset: 0;
+	justify-content: center;
+	opacity: 0;
+	padding: 1rem;
+	pointer-events: none;
+	position: fixed;
+	transition: opacity 0.2s ease;
+	z-index: 99999;
+}
+
+.cpf-modal.is-open {
+	pointer-events: auto;
+}
+
+.cpf-modal.is-visible {
+	opacity: 1;
+}
+
+.cpf-modal-overlay {
+	background: rgba(15, 23, 42, 0.7);
+	border: 0;
+	cursor: pointer;
+	inset: 0;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+}
+
+.cpf-modal-dialog {
+	background: #ffffff;
+	border-radius: 14px;
+	box-shadow: 0 20px 45px rgba(0, 0, 0, 0.26);
+	max-height: calc(100vh - 2rem);
+	overflow: auto;
+	padding: 1.25rem 1.25rem 1.5rem;
+	position: relative;
+	transform: translateY(16px) scale(0.98);
+	transition: transform 0.2s ease;
+	width: min(1040px, 100%);
+	z-index: 1;
+}
+
+.cpf-modal.is-visible .cpf-modal-dialog {
+	transform: translateY(0) scale(1);
+}
+
+.cpf-modal-close {
+	align-items: center;
+	background: #f3f4f6;
+	border: 1px solid #d1d5db;
+	border-radius: 999px;
+	color: #111827;
+	cursor: pointer;
+	display: inline-flex;
+	font-size: 1.2rem;
+	font-weight: 700;
+	height: 2.1rem;
+	justify-content: center;
+	line-height: 1;
+	position: absolute;
+	right: 0.7rem;
+	top: 0.7rem;
+	width: 2.1rem;
+}
+
+.cpf-modal-close:hover,
+.cpf-modal-close:focus-visible {
+	background: #e5e7eb;
+	outline: none;
+}
+
+.cpf-modal-title {
+	color: #111827;
+	font-size: 1.35rem;
+	line-height: 1.35;
+	margin: 0 2.6rem 1rem 0;
+}
+
+.cpf-portfolio-swiper-wrap {
+	display: grid;
+	gap: 0.85rem;
+}
+
+.cpf-portfolio-main {
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+.cpf-portfolio-main .swiper-slide {
+	align-items: center;
+	background: #0f172a;
+	border-radius: 10px;
+	display: flex;
+	justify-content: center;
+	min-height: 300px;
+	overflow: hidden;
+}
+
+.cpf-portfolio-main .swiper-slide img {
+	display: block;
+	height: auto;
+	max-height: 72vh;
+	object-fit: contain;
+	width: 100%;
+}
+
+.cpf-portfolio-thumbs {
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.cpf-portfolio-thumbs.is-hidden {
+	display: none;
+}
+
+.cpf-portfolio-thumbs .swiper-slide {
+	border: 1px solid transparent;
+	border-radius: 8px;
+	cursor: pointer;
+	height: 80px;
+	opacity: 0.55;
+	overflow: hidden;
+}
+
+.cpf-portfolio-thumbs .swiper-slide img {
+	display: block;
+	height: 100%;
+	object-fit: cover;
+	width: 100%;
+}
+
+.cpf-portfolio-thumbs .swiper-slide-thumb-active {
+	border-color: #1f6feb;
+	opacity: 1;
+}
+
+.cpf-swiper-button-prev,
+.cpf-swiper-button-next {
+	align-items: center;
+	background: rgba(17, 24, 39, 0.76);
+	border-radius: 999px;
+	color: #ffffff;
+	cursor: pointer;
+	display: flex;
+	height: 2.2rem;
+	justify-content: center;
+	margin-top: 0;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 2.2rem;
+	z-index: 5;
+}
+
+.cpf-swiper-button-prev {
+	left: 0.65rem;
+}
+
+.cpf-swiper-button-next {
+	right: 0.65rem;
+}
+
+.cpf-swiper-button-prev::before {
+	content: "\2039";
+	font-size: 1.2rem;
+	font-weight: 700;
+}
+
+.cpf-swiper-button-next::before {
+	content: "\203A";
+	font-size: 1.2rem;
+	font-weight: 700;
+}
+
+.cpf-swiper-button-prev.is-hidden,
+.cpf-swiper-button-next.is-hidden,
+.swiper-pagination.is-hidden {
+	display: none;
+}
+
+.cpf-empty-slide .cpf-empty-message {
+	background: transparent;
+	border: 0;
+	color: #e2e8f0;
+	margin: 0;
+}
+
+.cpf-movie-modal-dialog {
+	width: min(980px, 100%);
+}
+
+.cpf-responsive-video {
+	background: #000000;
+	border-radius: 10px;
+	overflow: hidden;
+	padding-top: 56.25%;
+	position: relative;
+}
+
+.cpf-video-container {
+	inset: 0;
+	position: absolute;
+}
+
+.cpf-video-container iframe {
+	border: 0;
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+
+.cpf-video-message {
+	color: #b91c1c;
+	font-weight: 600;
+	margin: 0.9rem 0 0;
+}
+
+body.cpf-modal-open {
+	overflow: hidden;
+}
+
+@media (max-width: 767px) {
+	.cpf-card-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.cpf-modal {
+		padding: 0.6rem;
+	}
+
+	.cpf-modal-dialog {
+		padding: 1rem 0.85rem 1.15rem;
+	}
+
+	.cpf-modal-title {
+		font-size: 1.15rem;
+	}
+
+	.cpf-portfolio-main .swiper-slide {
+		min-height: 220px;
+	}
+
+	.cpf-swiper-button-prev,
+	.cpf-swiper-button-next {
+		height: 2rem;
+		width: 2rem;
+	}
+}
