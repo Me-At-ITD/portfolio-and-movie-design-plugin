@@ -344,6 +344,7 @@
 					var modal = modalId ? document.getElementById( modalId ) : null;
 					var images = cpfParseImages( trigger.getAttribute( 'data-cpf-images' ) );
 					var fallbackImage = null;
+					var postId = trigger.getAttribute( 'data-cpf-post-id' ) || '';
 
 					if ( ! modal || ! modalId ) {
 						return;
@@ -361,12 +362,15 @@
 						}
 					}
 
-					cpfPopulatePortfolioModal(
-						modal,
-						trigger.getAttribute( 'data-cpf-title' ) || '',
-						images
-					);
 					cpfOpenModal( modalId );
+					window.requestAnimationFrame( function () {
+						cpfPopulatePortfolioModal(
+							modal,
+							trigger.getAttribute( 'data-cpf-title' ) || '',
+							images,
+							postId
+						);
+					} );
 				} );
 			}( triggers[ index ] ) );
 		}
@@ -394,6 +398,16 @@
 		}
 
 		for ( index = 0; index < parsedImages.length; index += 1 ) {
+			if ( 'string' === typeof parsedImages[ index ] && '' !== parsedImages[ index ] ) {
+				cleanImages.push(
+					{
+						url: parsedImages[ index ],
+						alt: ''
+					}
+				);
+				continue;
+			}
+
 			if ( ! parsedImages[ index ] || 'string' !== typeof parsedImages[ index ].url || '' === parsedImages[ index ].url ) {
 				continue;
 			}
@@ -410,14 +424,55 @@
 	}
 
 	/**
+	 * Apply unique class names for a portfolio slider instance.
+	 *
+	 * @param {HTMLElement} element Element node.
+	 * @param {string}      key     Dataset key.
+	 * @param {string}      value   Class name value.
+	 * @return {void}
+	 */
+	function cpfSetUniqueClass( element, key, value ) {
+		if ( ! element ) {
+			return;
+		}
+
+		if ( element.dataset && element.dataset[ key ] ) {
+			element.classList.remove( element.dataset[ key ] );
+		}
+
+		if ( value ) {
+			element.classList.add( value );
+			if ( element.dataset ) {
+				element.dataset[ key ] = value;
+			}
+			return;
+		}
+
+		if ( element.dataset ) {
+			element.dataset[ key ] = '';
+		}
+	}
+
+	/**
+	 * Build a sanitized unique suffix.
+	 *
+	 * @param {string} base Base value.
+	 * @return {string} Sanitized value.
+	 */
+	function cpfBuildUniqueSuffix( base ) {
+		return String( base || '' ).toLowerCase().replace( /[^a-z0-9_-]+/g, '-' );
+	}
+
+	/**
 	 * Populate the portfolio modal with slider content.
 	 *
 	 * @param {HTMLElement} modal  Modal element.
 	 * @param {string}      title  Modal title.
 	 * @param {Array}       images Gallery images.
+	 * @param {string}      postId Post ID.
 	 * @return {void}
 	 */
-	function cpfPopulatePortfolioModal( modal, title, images ) {
+	function cpfPopulatePortfolioModal( modal, title, images, postId ) {
 		var titleNode = modal.querySelector( '.cpf-modal-title' );
 		var mainSlider = modal.querySelector( '.cpf-slider-main' );
 		var thumbsSlider = modal.querySelector( '.cpf-slider-thumbs' );
@@ -426,6 +481,16 @@
 		var pagination = modal.querySelector( '.cpf-slider-main .swiper-pagination' );
 		var nextButton = modal.querySelector( '.cpf-slider-next' );
 		var prevButton = modal.querySelector( '.cpf-slider-prev' );
+		var modalId = modal.getAttribute( 'id' ) || 'portfolio-modal';
+		var uniqueSuffix = cpfBuildUniqueSuffix( modalId + '-' + ( postId || '0' ) );
+		var mainUnique = 'cpf-slider-main-' + uniqueSuffix;
+		var thumbsUnique = 'cpf-slider-thumbs-' + uniqueSuffix;
+		var nextUnique = 'cpf-slider-next-' + uniqueSuffix;
+		var prevUnique = 'cpf-slider-prev-' + uniqueSuffix;
+		var mainSelector = '';
+		var thumbsSelector = '';
+		var nextSelector = '';
+		var prevSelector = '';
 		var index = 0;
 
 		if ( titleNode ) {
@@ -435,6 +500,16 @@
 		if ( ! mainSlider || ! thumbsSlider || ! mainWrapper || ! thumbsWrapper ) {
 			return;
 		}
+
+		cpfSetUniqueClass( mainSlider, 'cpfMainUnique', mainUnique );
+		cpfSetUniqueClass( thumbsSlider, 'cpfThumbsUnique', thumbsUnique );
+		cpfSetUniqueClass( nextButton, 'cpfNextUnique', nextUnique );
+		cpfSetUniqueClass( prevButton, 'cpfPrevUnique', prevUnique );
+
+		mainSelector = '.' + mainUnique;
+		thumbsSelector = '.' + thumbsUnique;
+		nextSelector = '.' + nextUnique;
+		prevSelector = '.' + prevUnique;
 
 		if ( modal.cpfMainSwiper && 'function' === typeof modal.cpfMainSwiper.destroy ) {
 			modal.cpfMainSwiper.destroy( true, true );
@@ -508,7 +583,7 @@
 		}
 
 		modal.cpfThumbSwiper = new window.Swiper(
-			thumbsSlider,
+			thumbsSelector,
 			{
 				slidesPerView: 5,
 				spaceBetween: 10,
@@ -527,7 +602,7 @@
 		);
 
 		modal.cpfMainSwiper = new window.Swiper(
-			mainSlider,
+			mainSelector,
 			{
 				spaceBetween: 12,
 				keyboard: {
@@ -535,8 +610,8 @@
 					onlyInViewport: false
 				},
 				navigation: {
-					nextEl: nextButton,
-					prevEl: prevButton
+					nextEl: nextSelector,
+					prevEl: prevSelector
 				},
 				pagination: {
 					el: pagination,

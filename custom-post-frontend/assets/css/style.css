@@ -301,15 +301,25 @@
 	color: #ffffff;
 	cursor: pointer;
 	display: flex;
-	height: 2.5rem;
+	height: 40px;
 	justify-content: center;
 	margin-top: 0;
 	position: absolute;
 	top: 50%;
 	transform: translateY(-50%);
 	transition: background-color 0.2s ease, border-color 0.2s ease;
-	width: 2.5rem;
+	width: 40px;
 	z-index: 9;
+}
+
+.cpf-portfolio-gallery .swiper-button-prev,
+.cpf-portfolio-gallery .swiper-button-next {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	height: 40px;
+	width: 40px;
+	z-index: 10;
 }
 
 .cpf-slider-button:hover,
@@ -320,11 +330,11 @@
 }
 
 .cpf-slider-prev {
-	left: -2.5rem;
+	left: -50px;
 }
 
 .cpf-slider-next {
-	right: -2.5rem;
+	right: -50px;
 }
 
 .cpf-slider-button::after {

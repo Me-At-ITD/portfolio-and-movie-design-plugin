@@ -437,26 +437,63 @@ function cpf_get_post_thumbnail_data( $post_id, $size = 'large' ) {
  * @return array
  */
 function cpf_get_portfolio_gallery_images( $post_id ) {
-	$field_names = array( 'img1', 'img2', 'img3', 'img4', 'img5' );
-	$images      = array();
-	$title       = get_the_title( $post_id );
-	$fallback    = is_string( $title ) ? $title : '';
+	$images   = array();
+	$title    = get_the_title( $post_id );
+	$fallback = is_string( $title ) ? $title : '';
 
-	foreach ( $field_names as $field_name ) {
-		$field_value = cpf_get_custom_field_value( $post_id, $field_name );
-		$image_data  = cpf_resolve_image_data( $field_value, 'large' );
+	for ( $index = 1; $index <= 5; $index++ ) {
+		$image_field = cpf_get_custom_field_value( $post_id, 'img' . $index );
+		$image_url   = '';
+		$image_alt   = $fallback;
 
-		if ( '' === $image_data['url'] ) {
+		if ( is_string( $image_field ) ) {
+			$image_url = esc_url_raw( $image_field );
+		} elseif ( is_numeric( $image_field ) ) {
+			$attachment_id = absint( $image_field );
+			if ( $attachment_id > 0 ) {
+				$resolved_url = wp_get_attachment_image_url( $attachment_id, 'large' );
+				$image_url    = $resolved_url ? $resolved_url : '';
+				$image_alt    = cpf_get_attachment_alt( $attachment_id, $fallback );
+			}
+		} elseif ( is_array( $image_field ) ) {
+			if ( ! empty( $image_field['url'] ) && is_string( $image_field['url'] ) ) {
+				$image_url = esc_url_raw( $image_field['url'] );
+			}
+
+			if ( '' === $image_url ) {
+				$attachment_id = 0;
+				if ( ! empty( $image_field['ID'] ) ) {
+					$attachment_id = absint( $image_field['ID'] );
+				} elseif ( ! empty( $image_field['id'] ) ) {
+					$attachment_id = absint( $image_field['id'] );
+				}
+
+				if ( $attachment_id > 0 ) {
+					$resolved_url = wp_get_attachment_image_url( $attachment_id, 'large' );
+					$image_url    = $resolved_url ? $resolved_url : '';
+					$image_alt    = cpf_get_attachment_alt( $attachment_id, $fallback );
+				}
+			}
+
+			if ( ! empty( $image_field['alt'] ) && is_string( $image_field['alt'] ) ) {
+				$image_alt = sanitize_text_field( $image_field['alt'] );
+			}
+		} elseif ( $image_field instanceof WP_Post ) {
+			$attachment_id = absint( $image_field->ID );
+			if ( $attachment_id > 0 ) {
+				$resolved_url = wp_get_attachment_image_url( $attachment_id, 'large' );
+				$image_url    = $resolved_url ? $resolved_url : '';
+				$image_alt    = cpf_get_attachment_alt( $attachment_id, $fallback );
+			}
+		}
+
+		if ( '' === $image_url ) {
 			continue;
 		}
 
-		if ( '' === $image_data['alt'] ) {
-			$image_data['alt'] = $fallback;
-		}
-
 		$images[] = array(
-			'url' => $image_data['url'],
-			'alt' => $image_data['alt'],
+			'url' => $image_url,
+			'alt' => $image_alt,
 		);
 	}
 
