@@ -340,37 +340,10 @@
 		for ( index = 0; index < triggers.length; index += 1 ) {
 			( function ( trigger ) {
 				trigger.addEventListener( 'click', function () {
-					var modalId = trigger.getAttribute( 'data-cpf-modal-id' );
-					var modal = modalId ? document.getElementById( modalId ) : null;
 					var images = cpfParseImages( trigger.getAttribute( 'data-cpf-images' ) );
-					var fallbackImage = null;
-					var postId = trigger.getAttribute( 'data-cpf-post-id' ) || '';
+					var title = trigger.getAttribute( 'data-cpf-title' ) || '';
 
-					if ( ! modal || ! modalId ) {
-						return;
-					}
-
-					if ( ! images.length ) {
-						fallbackImage = trigger.querySelector( 'img' );
-						if ( fallbackImage && fallbackImage.getAttribute( 'src' ) ) {
-							images.push(
-								{
-									url: fallbackImage.getAttribute( 'src' ),
-									alt: fallbackImage.getAttribute( 'alt' ) || ''
-								}
-							);
-						}
-					}
-
-					cpfOpenModal( modalId );
-					window.requestAnimationFrame( function () {
-						cpfPopulatePortfolioModal(
-							modal,
-							trigger.getAttribute( 'data-cpf-title' ) || '',
-							images,
-							postId
-						);
-					} );
+					cpfOpenPortfolioLightbox( images, title );
 				} );
 			}( triggers[ index ] ) );
 		}
@@ -421,6 +394,57 @@
 		}
 
 		return cleanImages;
+	}
+
+	/**
+	 * Open a Fancybox lightbox for portfolio images.
+	 *
+	 * @param {Array}  images Images array.
+	 * @param {string} title  Gallery title.
+	 * @return {void}
+	 */
+	function cpfOpenPortfolioLightbox( images, title ) {
+		var items = [];
+		var index = 0;
+
+		if ( ! images.length ) {
+			return;
+		}
+
+		for ( index = 0; index < images.length; index += 1 ) {
+			if ( ! images[ index ] || 'string' !== typeof images[ index ].url || '' === images[ index ].url ) {
+				continue;
+			}
+
+			items.push(
+				{
+					src: images[ index ].url,
+					thumb: images[ index ].url,
+					type: 'image',
+					caption: title
+				}
+			);
+		}
+
+		if ( ! items.length ) {
+			return;
+		}
+
+		if ( window.Fancybox && 'function' === typeof window.Fancybox.show ) {
+			window.Fancybox.show(
+				items,
+				{
+					Thumbs: {
+						type: 'classic'
+					},
+					Toolbar: true,
+					dragToClose: true
+				}
+			);
+			return;
+		}
+
+		window.open( items[ 0 ].src, '_blank', 'noopener,noreferrer' );
 	}
 
 	/**

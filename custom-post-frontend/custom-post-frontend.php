@@ -156,22 +156,22 @@ function cpf_enqueue_frontend_assets() {
 
 	if ( $has_portfolio_shortcode ) {
 		wp_register_style(
-			'cpf_swiper_style',
-			'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css',
+			'cpf_fancybox_style',
+			'https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css',
 			array(),
-			'11.2.6'
+			'5.0.36'
 		);
 
 		wp_register_script(
-			'cpf_swiper_script',
-			'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js',
+			'cpf_fancybox_script',
+			'https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js',
 			array(),
-			'11.2.6',
+			'5.0.36',
 			true
 		);
 
-		wp_enqueue_style( 'cpf_swiper_style' );
-		$script_dependencies[] = 'cpf_swiper_script';
+		wp_enqueue_style( 'cpf_fancybox_style' );
+		$script_dependencies[] = 'cpf_fancybox_script';
 	}
 
 	wp_register_style(
