@@ -772,9 +772,10 @@
 		iframe.setAttribute( 'src', cpfBuildAutoplayUrl( videoUrl ) );
 		iframe.setAttribute( 'title', iframeTitle );
 		iframe.setAttribute( 'loading', 'lazy' );
-		iframe.setAttribute( 'allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' );
+		iframe.setAttribute( 'allow', 'autoplay; encrypted-media' );
 		iframe.setAttribute( 'allowfullscreen', '' );
 		iframe.setAttribute( 'referrerpolicy', 'strict-origin-when-cross-origin' );
+		iframe.setAttribute( 'frameborder', '0' );
 		videoContainer.appendChild( iframe );
 	}
 
@@ -787,8 +788,13 @@
 	function cpfResetMovieModal( modal ) {
 		var videoContainer = modal.querySelector( '[data-cpf-video-container]' );
 		var messageNode = modal.querySelector( '[data-cpf-video-message]' );
+		var iframe = null;
 
 		if ( videoContainer ) {
+			iframe = videoContainer.querySelector( 'iframe' );
+			if ( iframe && iframe.getAttribute( 'src' ) ) {
+				iframe.setAttribute( 'src', iframe.getAttribute( 'src' ) );
+			}
 			videoContainer.innerHTML = '';
 		}
 
@@ -816,8 +822,21 @@
 	 * @return {string} URL with query params.
 	 */
 	function cpfBuildAutoplayUrl( url ) {
-		var separator = -1 === url.indexOf( '?' ) ? '?' : '&';
-		return url + separator + 'autoplay=1&rel=0&modestbranding=1';
+		var parsedUrl = null;
+		var separator = '';
+
+		try {
+			parsedUrl = new window.URL( url, window.location.origin );
+			parsedUrl.searchParams.set( 'autoplay', '1' );
+			parsedUrl.searchParams.set( 'modestbranding', '1' );
+			parsedUrl.searchParams.set( 'rel', '0' );
+			parsedUrl.searchParams.set( 'controls', '1' );
+			parsedUrl.searchParams.set( 'showinfo', '0' );
+			return parsedUrl.toString();
+		} catch ( error ) {
+			separator = -1 === url.indexOf( '?' ) ? '?' : '&';
+			return url + separator + 'autoplay=1&modestbranding=1&rel=0&controls=1&showinfo=0';
+		}
 	}
 
 	if ( 'loading' === document.readyState ) {

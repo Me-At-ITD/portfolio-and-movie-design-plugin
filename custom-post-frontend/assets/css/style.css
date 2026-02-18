@@ -336,6 +336,96 @@
 	margin-top: 10px;
 }
 
+/* Movie popup refinements only. */
+.cpf-movie-modal {
+	z-index: 99999;
+}
+
+.cpf-movie-modal .cpf-modal-overlay {
+	background: rgba(0, 0, 0, 0.85);
+	backdrop-filter: blur(4px);
+	opacity: 1;
+	transition: opacity 0.3s ease;
+}
+
+.cpf-movie-modal .cpf-modal-content {
+	animation: cpf-movie-fade-in 0.4s ease;
+	aspect-ratio: 16 / 9;
+	background: #000000;
+	border-radius: 10px;
+	box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+	max-height: 88vh;
+	max-width: 960px;
+	overflow: hidden;
+	padding: 0;
+	position: relative;
+	transform: scale(0.95);
+	transition: opacity 0.3s ease, transform 0.3s ease;
+	width: min(960px, 90vw);
+}
+
+.cpf-movie-modal.is-visible .cpf-modal-content {
+	transform: scale(1);
+}
+
+.cpf-movie-modal .cpf-modal-title {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+.cpf-video-wrapper {
+	background: #000000;
+	height: 100%;
+	width: 100%;
+}
+
+.cpf-video-wrapper iframe {
+	border: none;
+	border-radius: 10px;
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.cpf-movie-modal .cpf-modal-close {
+	background: transparent;
+	border: 0;
+	color: #ffffff;
+	font-size: 32px;
+	height: auto;
+	line-height: 1;
+	padding: 0;
+	right: 14px;
+	top: 10px;
+	width: auto;
+	z-index: 20;
+}
+
+.cpf-movie-modal .cpf-modal-close:hover,
+.cpf-movie-modal .cpf-modal-close:focus-visible {
+	background: transparent;
+	border: 0;
+	color: #e50914;
+}
+
+@keyframes cpf-movie-fade-in {
+	from {
+		opacity: 0;
+		transform: scale(0.95);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
 body.cpf-modal-open {
 	overflow: hidden;
 }
@@ -396,5 +486,9 @@ body.cpf-modal-open {
 
 	.cpf-modal {
 		padding: 0.6rem;
+	}
+
+	.cpf-movie-modal .cpf-modal-content {
+		width: 94vw;
 	}
 }

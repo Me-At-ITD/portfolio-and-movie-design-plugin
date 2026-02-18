@@ -172,15 +172,13 @@ if ( isset( $cpf_terms ) && is_array( $cpf_terms ) ) {
 </section>
 
 <div class="cpf-modal cpf-movie-modal" id="<?php echo esc_attr( $cpf_modal_id ); ?>" hidden aria-hidden="true">
-	<button type="button" class="cpf-modal-overlay" data-cpf-modal-close="1" aria-label="<?php esc_attr_e( 'Close modal', 'custom-post-frontend-display' ); ?>"></button>
-	<div class="cpf-modal-dialog cpf-movie-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="<?php echo esc_attr( $cpf_modal_title ); ?>" tabindex="-1">
+	<div class="cpf-modal-overlay" data-cpf-modal-close="1" aria-hidden="true"></div>
+	<div class="cpf-modal-content cpf-modal-dialog cpf-movie-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="<?php echo esc_attr( $cpf_modal_title ); ?>" tabindex="-1">
 		<button type="button" class="cpf-modal-close" data-cpf-modal-close="1" aria-label="<?php esc_attr_e( 'Close modal', 'custom-post-frontend-display' ); ?>">
 			&times;
 		</button>
 		<h2 class="cpf-modal-title" id="<?php echo esc_attr( $cpf_modal_title ); ?>"></h2>
-		<div class="cpf-responsive-video">
-			<div class="cpf-video-container" data-cpf-video-container></div>
-		</div>
+		<div class="cpf-video-wrapper" data-cpf-video-container></div>
 		<p class="cpf-video-message" data-cpf-video-message hidden></p>
 	</div>
 </div>
