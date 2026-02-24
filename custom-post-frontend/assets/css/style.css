@@ -1,0 +1,380 @@
+.cpf-display {
+	color: #EAEAEA;
+	font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+	margin: 2rem 0;
+}
+
+.cpf-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	justify-content: start;
+	margin: 0 0 30px;
+}
+
+.cpf-tab {
+	padding: 0;
+	color: #EAEAEA;
+	cursor: pointer;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.2;
+	transition: all 0.3s ease;
+	border: none;
+	background-color: transparent;
+}
+
+.cpf-tab:hover,
+.cpf-tab:focus-visible,
+.cpf-tab.is-active {
+	border-bottom: 1px solid #F2C94C;
+	color: #F2C94C;
+	outline: none;
+}
+
+.cpf-movie-grid,
+.cpf-portfolio-grid {
+	display: grid;
+	gap: 24px;
+	grid-template-columns: repeat(3, 1fr);
+}
+
+.cpf-movie-card,
+.cpf-portfolio-card {
+	background: transparent;
+	border: none;
+	border-radius: 0;
+	color: #EAEAEA;
+	overflow: hidden;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cpf-movie-thumb,
+.cpf-portfolio-thumb {
+	background: #0B0B0B;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	position: relative;
+	height: 250px;
+}
+
+.cpf-movie-thumb img,
+.cpf-portfolio-thumb img {
+	width: 100%;
+	height: 250px !important;
+	object-fit: cover;
+	transition: transform 0.4s ease;
+}
+
+.cpf-movie-card:hover img,
+.cpf-portfolio-card:hover img {
+	transform: scale(1.05);
+}
+
+.cpf-overlay {
+	align-items: center;
+	background: rgba(0, 0, 0, 0.56);
+	display: flex;
+	inset: 0;
+	justify-content: center;
+	opacity: 0;
+	position: absolute;
+	transition: opacity 0.3s ease;
+}
+
+.cpf-movie-card:hover .cpf-overlay,
+.cpf-portfolio-card:hover .cpf-overlay {
+	opacity: 1;
+}
+
+.cpf-play-icon {
+	align-items: center;
+	background: rgba(0, 0, 0, 0.42);
+	border: 2px solid #F2C94C;
+	border-radius: 50%;
+	color: #F2C94C;
+	display: flex;
+	font-size: 64px;
+	height: 76px;
+	justify-content: center;
+	line-height: 1;
+	transform: scale(0.85);
+	transition: transform 0.3s ease;
+	width: 76px;
+}
+
+.cpf-play-icon i {
+	font-size: 64px;
+	line-height: 1;
+}
+
+.cpf-movie-card:hover .cpf-play-icon {
+	transform: scale(1);
+}
+
+.cpf-movie-info,
+.cpf-portfolio-info {
+	padding: 15px;
+}
+
+.cpf-title {
+	color: #EAEAEA;
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 1.35;
+	margin-bottom: 6px;
+}
+
+.cpf-meta {
+	color: #BDBDBD;
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 13px;
+	gap: 12px;
+	margin-bottom: 8px;
+}
+
+.cpf-meta i { margin-right: 4px; }
+
+.cpf-desc {
+	color: #EAEAEA;
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+.cpf-photo-count {
+	background: #F2C94C;
+	color: #0B0B0B;
+	font-size: 14px;
+	font-weight: 500;
+	padding: 6px 12px;
+	margin: 10px;
+}
+
+/* Load More button */
+.cpf-load-more-wrap {
+	text-align: center;
+	margin-top: 2rem;
+}
+
+.cpf-load-more {
+	background: transparent;
+	border: 1px solid #F2C94C;
+	color: #F2C94C;
+	font-size: 15px;
+	font-weight: 500;
+	padding: 10px 24px;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.cpf-load-more:hover {
+	background: #F2C94C;
+	color: #0B0B0B;
+}
+
+@media (max-width: 1100px) {
+	.cpf-movie-grid,
+	.cpf-portfolio-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (max-width: 767px) {
+	.cpf-movie-grid,
+	.cpf-portfolio-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* Preserve existing popup/lightbox behavior styling. */
+.cpf-empty-message {
+	background: #141414;
+	border: 1px dashed rgba(255, 255, 255, 0.22);
+	border-radius: 8px;
+	color: #bbbbbb;
+	margin: 0;
+	padding: 12px 14px;
+}
+
+.cpf-card-media-placeholder {
+	color: #b0b0b0;
+	display: block;
+	padding: 1rem;
+	text-align: center;
+}
+
+.cpf-modal[hidden] {
+	display: none;
+}
+
+.cpf-modal {
+	align-items: center;
+	display: flex;
+	inset: 0;
+	justify-content: center;
+	opacity: 0;
+	padding: 1rem;
+	pointer-events: none;
+	position: fixed;
+	transition: opacity 0.24s ease;
+	z-index: 99999;
+}
+
+.cpf-modal.is-open {
+	pointer-events: auto;
+}
+
+.cpf-modal.is-visible {
+	opacity: 1;
+}
+
+.cpf-modal-overlay {
+	background: rgba(0, 0, 0, 0.82);
+	border: 0;
+	cursor: pointer;
+	inset: 0;
+	position: absolute;
+}
+
+.cpf-modal-dialog {
+	background: #111111;
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	border-radius: 10px;
+	box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6);
+	max-height: calc(100vh - 2rem);
+	overflow: auto;
+	padding: 1rem;
+	position: relative;
+	transform: translateY(12px);
+	transition: transform 0.24s ease;
+	width: min(980px, 100%);
+	z-index: 1;
+}
+
+.cpf-modal.is-visible .cpf-modal-dialog {
+	transform: translateY(0);
+}
+
+.cpf-modal-close {
+	align-items: center;
+	background: rgba(255, 255, 255, 0.1);
+	border: 1px solid rgba(255, 255, 255, 0.25);
+	border-radius: 50%;
+	color: #ffffff;
+	cursor: pointer;
+	display: inline-flex;
+	font-size: 1.2rem;
+	height: 34px;
+	justify-content: center;
+	line-height: 1;
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	width: 34px;
+}
+
+.cpf-modal-close:hover,
+.cpf-modal-close:focus-visible {
+	background: #e50914;
+	border-color: #e50914;
+	outline: none;
+}
+
+.cpf-modal-title {
+	color: #ffffff;
+	font-size: 1.2rem;
+	margin: 0 2.25rem 1rem 0;
+}
+
+.cpf-video-wrapper {
+	background: #000000;
+	height: 100%;
+	width: 100%;
+}
+
+.cpf-video-wrapper iframe {
+	border: none;
+	border-radius: 10px;
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.cpf-video-message {
+	color: #ff6868;
+	font-size: 14px;
+	margin-top: 10px;
+}
+
+.cpf-movie-modal .cpf-modal-overlay {
+	background: rgba(0, 0, 0, 0.85);
+	backdrop-filter: blur(4px);
+}
+
+.cpf-movie-modal .cpf-modal-content {
+	aspect-ratio: 16 / 9;
+	background: #000000;
+	border-radius: 10px;
+	box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+	max-height: 88vh;
+	max-width: 960px;
+	overflow: hidden;
+	padding: 0;
+	position: relative;
+	width: min(960px, 90vw);
+}
+
+.cpf-movie-modal .cpf-modal-title {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+.cpf-movie-modal .cpf-modal-close {
+	background: transparent;
+	border: 0;
+	color: #ffffff;
+	font-size: 32px;
+	height: auto;
+	line-height: 1;
+	padding: 0;
+	right: 14px;
+	top: 10px;
+	width: auto;
+	z-index: 20;
+}
+
+.cpf-movie-modal .cpf-modal-close:hover,
+.cpf-movie-modal .cpf-modal-close:focus-visible {
+	background: transparent;
+	border: 0;
+	color: #e50914;
+}
+
+body.cpf-modal-open {
+	overflow: hidden;
+}
+
+.fancybox__backdrop {
+	background: rgba(0, 0, 0, 0.9);
+}
+
+.fancybox__content {
+	border-radius: 8px;
+}
+
+.fancybox__toolbar {
+	--f-button-bg: rgba(255, 255, 255, 0.12);
+	--f-button-color: #ffffff;
+	--f-button-hover-bg: #e50914;
+}
