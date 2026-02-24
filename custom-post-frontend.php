@@ -445,6 +445,7 @@ function cpf_get_portfolio_gallery_images( $post_id ) {
 	$images   = array();
 	$title    = get_the_title( $post_id );
 	$fallback = is_string( $title ) ? $title : '';
+	$current_language = apply_filters( 'wpml_current_language', null );
 
 	for ( $index = 1; $index <= 15; $index++ ) {
 		if ( function_exists( 'get_field' ) ) {
@@ -459,28 +460,50 @@ function cpf_get_portfolio_gallery_images( $post_id ) {
 
 		$image_url = '';
 		$image_alt = $fallback;
+		$attachment_id = 0;
+		$has_array_alt = false;
 
 		// Supports ACF Image Array and Image URL return formats.
-		if ( is_array( $image_field ) && ! empty( $image_field['url'] ) && is_string( $image_field['url'] ) ) {
-			$image_url = esc_url_raw( $image_field['url'] );
+		if ( is_array( $image_field ) ) {
+			if ( ! empty( $image_field['ID'] ) ) {
+				$attachment_id = absint( $image_field['ID'] );
+			} elseif ( ! empty( $image_field['id'] ) ) {
+				$attachment_id = absint( $image_field['id'] );
+			}
+
 			if ( ! empty( $image_field['alt'] ) && is_string( $image_field['alt'] ) ) {
 				$image_alt = sanitize_text_field( $image_field['alt'] );
+				$has_array_alt = true;
 			}
-		} elseif ( is_string( $image_field ) ) {
-			$image_url = esc_url_raw( $image_field );
+
+			if ( 0 === $attachment_id && ! empty( $image_field['url'] ) && is_string( $image_field['url'] ) ) {
+				$image_url = esc_url_raw( $image_field['url'] );
+			}
 		} elseif ( is_numeric( $image_field ) ) {
 			$attachment_id = absint( $image_field );
-			if ( $attachment_id > 0 ) {
-				$resolved_url = wp_get_attachment_image_url( $attachment_id, 'large' );
-				$image_url    = $resolved_url ? $resolved_url : '';
-				$image_alt    = cpf_get_attachment_alt( $attachment_id, $fallback );
-			}
 		} elseif ( $image_field instanceof WP_Post ) {
 			$attachment_id = absint( $image_field->ID );
-			if ( $attachment_id > 0 ) {
-				$resolved_url = wp_get_attachment_image_url( $attachment_id, 'large' );
-				$image_url    = $resolved_url ? $resolved_url : '';
-				$image_alt    = cpf_get_attachment_alt( $attachment_id, $fallback );
+		} elseif ( is_string( $image_field ) ) {
+			if ( is_numeric( $image_field ) ) {
+				$attachment_id = absint( $image_field );
+			} else {
+				$image_url = esc_url_raw( $image_field );
+			}
+		}
+
+		if ( $attachment_id > 0 ) {
+			$translated_attachment_id = apply_filters( 'wpml_object_id', $attachment_id, 'attachment', false, $current_language );
+			$translated_attachment_id = absint( $translated_attachment_id );
+
+			if ( 0 === $translated_attachment_id ) {
+				$translated_attachment_id = $attachment_id;
+			}
+
+			$resolved_url = wp_get_attachment_url( $translated_attachment_id );
+			$image_url    = $resolved_url ? $resolved_url : '';
+
+			if ( ! $has_array_alt ) {
+				$image_alt = cpf_get_attachment_alt( $translated_attachment_id, $fallback );
 			}
 		}
 
