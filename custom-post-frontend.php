@@ -494,11 +494,6 @@ function cpf_get_portfolio_gallery_images( $post_id ) {
 		if ( $attachment_id > 0 ) {
 			$translated_attachment_id = apply_filters( 'wpml_object_id', $attachment_id, 'attachment', false, $current_language );
 			$translated_attachment_id = absint( $translated_attachment_id );
-
-			if ( 0 === $translated_attachment_id ) {
-				$translated_attachment_id = $attachment_id;
-			}
-
 			$resolved_url = wp_get_attachment_url( $translated_attachment_id );
 			$image_url    = $resolved_url ? $resolved_url : '';
 
