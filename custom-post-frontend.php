@@ -219,6 +219,8 @@ function cpf_get_posts_by_type( $post_type ) {
 			'order'               => 'DESC',
 			'ignore_sticky_posts' => true,
 			'no_found_rows'       => true,
+			'suppress_filters'    => false,
+			'lang'                => apply_filters( 'wpml_current_language', null ),
 		)
 	);
 
@@ -250,6 +252,7 @@ function cpf_get_terms_for_posts( $taxonomy, $post_ids ) {
 			'orderby'    => 'name',
 			'order'      => 'ASC',
 			'object_ids' => $sanitized_post_ids,
+			'lang'       => apply_filters( 'wpml_current_language', null ),
 		)
 	);
 
@@ -289,6 +292,7 @@ function cpf_get_post_term_map( $post_ids, $taxonomy ) {
 		$taxonomy,
 		array(
 			'fields' => 'all_with_object_id',
+			'lang'   => apply_filters( 'wpml_current_language', null ),
 		)
 	);
 
@@ -441,6 +445,7 @@ function cpf_get_portfolio_gallery_images( $post_id ) {
 	$images   = array();
 	$title    = get_the_title( $post_id );
 	$fallback = is_string( $title ) ? $title : '';
+	$current_language = apply_filters( 'wpml_current_language', null );
 
 	for ( $index = 1; $index <= 15; $index++ ) {
 		if ( function_exists( 'get_field' ) ) {
@@ -455,28 +460,45 @@ function cpf_get_portfolio_gallery_images( $post_id ) {
 
 		$image_url = '';
 		$image_alt = $fallback;
+		$attachment_id = 0;
+		$has_array_alt = false;
 
 		// Supports ACF Image Array and Image URL return formats.
-		if ( is_array( $image_field ) && ! empty( $image_field['url'] ) && is_string( $image_field['url'] ) ) {
-			$image_url = esc_url_raw( $image_field['url'] );
+		if ( is_array( $image_field ) ) {
+			if ( ! empty( $image_field['ID'] ) ) {
+				$attachment_id = absint( $image_field['ID'] );
+			} elseif ( ! empty( $image_field['id'] ) ) {
+				$attachment_id = absint( $image_field['id'] );
+			}
+
 			if ( ! empty( $image_field['alt'] ) && is_string( $image_field['alt'] ) ) {
 				$image_alt = sanitize_text_field( $image_field['alt'] );
+				$has_array_alt = true;
 			}
-		} elseif ( is_string( $image_field ) ) {
-			$image_url = esc_url_raw( $image_field );
+
+			if ( 0 === $attachment_id && ! empty( $image_field['url'] ) && is_string( $image_field['url'] ) ) {
+				$image_url = esc_url_raw( $image_field['url'] );
+			}
 		} elseif ( is_numeric( $image_field ) ) {
 			$attachment_id = absint( $image_field );
-			if ( $attachment_id > 0 ) {
-				$resolved_url = wp_get_attachment_image_url( $attachment_id, 'large' );
-				$image_url    = $resolved_url ? $resolved_url : '';
-				$image_alt    = cpf_get_attachment_alt( $attachment_id, $fallback );
-			}
 		} elseif ( $image_field instanceof WP_Post ) {
 			$attachment_id = absint( $image_field->ID );
-			if ( $attachment_id > 0 ) {
-				$resolved_url = wp_get_attachment_image_url( $attachment_id, 'large' );
-				$image_url    = $resolved_url ? $resolved_url : '';
-				$image_alt    = cpf_get_attachment_alt( $attachment_id, $fallback );
+		} elseif ( is_string( $image_field ) ) {
+			if ( is_numeric( $image_field ) ) {
+				$attachment_id = absint( $image_field );
+			} else {
+				$image_url = esc_url_raw( $image_field );
+			}
+		}
+
+		if ( $attachment_id > 0 ) {
+			$translated_attachment_id = apply_filters( 'wpml_object_id', $attachment_id, 'attachment', false, $current_language );
+			$translated_attachment_id = absint( $translated_attachment_id );
+			$resolved_url = wp_get_attachment_url( $translated_attachment_id );
+			$image_url    = $resolved_url ? $resolved_url : '';
+
+			if ( ! $has_array_alt ) {
+				$image_alt = cpf_get_attachment_alt( $translated_attachment_id, $fallback );
 			}
 		}
 
@@ -652,6 +674,7 @@ function cpf_shortcode_portfolio_display() {
 			'hide_empty' => true,
 			'orderby'    => 'name',
 			'order'      => 'ASC',
+			'lang'       => apply_filters( 'wpml_current_language', null ),
 		)
 	);
 
@@ -712,8 +735,94 @@ function cpf_shortcode_portfolio_display() {
 function cpf_shortcode_movie_display() {
 	$movie_posts = cpf_get_posts_by_type( 'movie' );
 	$post_ids    = wp_list_pluck( $movie_posts, 'ID' );
-	$term_map    = cpf_get_post_term_map( $post_ids, 'movie-category' );
+	$current_language = apply_filters( 'wpml_current_language', null );
+	$term_map    = array();
+
+	foreach ( $post_ids as $post_id ) {
+		$post_id = absint( $post_id );
+		$term_map[ $post_id ] = array();
+
+		if ( 0 === $post_id ) {
+			continue;
+		}
+
+		$post_terms = wp_get_object_terms(
+			$post_id,
+			'movie-category',
+			array(
+				'lang' => $current_language,
+			)
+		);
+
+		if ( is_wp_error( $post_terms ) || ! is_array( $post_terms ) ) {
+			continue;
+		}
+
+		$translated_terms = array();
+		foreach ( $post_terms as $term ) {
+			if ( ! $term instanceof WP_Term ) {
+				continue;
+			}
+
+			$translated_term_id = apply_filters(
+				'wpml_object_id',
+				$term->term_id,
+				'movie-category',
+				false,
+				$current_language
+			);
+			$translated_term_id = absint( $translated_term_id );
+
+			if ( 0 === $translated_term_id ) {
+				continue;
+			}
+
+			$translated_term = get_term( $translated_term_id, 'movie-category' );
+			if ( $translated_term instanceof WP_Term ) {
+				$translated_terms[] = $translated_term;
+			}
+		}
+
+		$term_map[ $post_id ] = array_values(
+			array_unique(
+				array_filter(
+					array_map(
+						'absint',
+						wp_list_pluck( $translated_terms, 'term_id' )
+					)
+				)
+			)
+		);
+	}
+
 	$terms       = cpf_get_terms_for_posts( 'movie-category', $post_ids );
+	$translated_terms = array();
+
+	foreach ( $terms as $term ) {
+		if ( ! $term instanceof WP_Term ) {
+			continue;
+		}
+
+		$translated_term_id = apply_filters(
+			'wpml_object_id',
+			$term->term_id,
+			'movie-category',
+			false,
+			$current_language
+		);
+		$translated_term_id = absint( $translated_term_id );
+
+		if ( 0 === $translated_term_id ) {
+			continue;
+		}
+
+		$translated_term = get_term( $translated_term_id, 'movie-category' );
+		if ( $translated_term instanceof WP_Term ) {
+			$translated_terms[ absint( $translated_term->term_id ) ] = $translated_term;
+		}
+	}
+
+	$terms = array_values( $translated_terms );
 	$all_posts   = array();
 
 	foreach ( $movie_posts as $movie_post ) {
