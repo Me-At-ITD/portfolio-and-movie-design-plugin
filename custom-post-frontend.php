@@ -219,6 +219,8 @@ function cpf_get_posts_by_type( $post_type ) {
 			'order'               => 'DESC',
 			'ignore_sticky_posts' => true,
 			'no_found_rows'       => true,
+			'suppress_filters'    => false,
+			'lang'                => apply_filters( 'wpml_current_language', null ),
 		)
 	);
 
@@ -250,6 +252,7 @@ function cpf_get_terms_for_posts( $taxonomy, $post_ids ) {
 			'orderby'    => 'name',
 			'order'      => 'ASC',
 			'object_ids' => $sanitized_post_ids,
+			'lang'       => apply_filters( 'wpml_current_language', null ),
 		)
 	);
 
@@ -289,6 +292,7 @@ function cpf_get_post_term_map( $post_ids, $taxonomy ) {
 		$taxonomy,
 		array(
 			'fields' => 'all_with_object_id',
+			'lang'   => apply_filters( 'wpml_current_language', null ),
 		)
 	);
 
@@ -652,6 +656,7 @@ function cpf_shortcode_portfolio_display() {
 			'hide_empty' => true,
 			'orderby'    => 'name',
 			'order'      => 'ASC',
+			'lang'       => apply_filters( 'wpml_current_language', null ),
 		)
 	);
 
